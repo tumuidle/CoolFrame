@@ -1,0 +1,48 @@
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+group = 'me.h3xadecimal'
+version = '1.0-SNAPSHOT'
+
+configurations {
+    include
+    implementation.extendsFrom(include)
+}
+
+repositories {
+    maven { url "https://maven.aliyun.com/repository/central" }
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+
+    // https://mvnrepository.com/artifact/net.java.dev.jna/jna
+    include 'net.java.dev.jna:jna:5.13.0'
+    // https://mvnrepository.com/artifact/net.java.dev.jna/jna-platform
+    include 'net.java.dev.jna:jna-platform:5.13.0'
+
+    include "io.github.spair:imgui-java-binding:1.86.11"
+    include "io.github.spair:imgui-java-lwjgl3:1.86.11"
+    include "io.github.spair:imgui-java-natives-windows:1.86.11"
+    include "io.github.spair:imgui-java-app:1.86.11"
+}
+
+test {
+    useJUnitPlatform()
+}
+
+shadowJar {
+    configurations = [project.configurations.include]
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+jar.manifest {
+    attributes "Main-Class": "me.h3xadecimal.Main"
+}
